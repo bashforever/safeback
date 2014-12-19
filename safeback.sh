@@ -133,6 +133,9 @@ else
 fi
 
 # mount of AMS150 done. Start backup in pairs of source and target
+# ================================================================
+# CAUTION: this section only contains several sample paths - real OPERATIONS requires more paths!
+# ================================================================
 SOURCE1="/media/Recs/Aufnahmen/Lieblingsfilme"
 TARGET1="/mnt/AMS150/Videos/Lieblingsfilme"
 backup $SOURCE1 $TARGET1
@@ -140,11 +143,6 @@ safeback $SOURCE1 $TARGET1
 
 SOURCE1="/media/Recs/Aufnahmen/Sophia"
 TARGET1="/mnt/AMS150/Videos/Sophia"
-backup $SOURCE1 $TARGET1
-safeback $SOURCE1 $TARGET1
-
-SOURCE1="/media/Recs/Aufnahmen/Immi"
-TARGET1="/mnt/AMS150/Videos/Immi"
 backup $SOURCE1 $TARGET1
 safeback $SOURCE1 $TARGET1
 
