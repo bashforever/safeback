@@ -2,11 +2,16 @@
 #: Name: safeback
 #: Version: 0.0
 #: Datum: 15.12.2014
-#: Purpose: safeback does a backup from SOURCE to TARGET using ignore-existing. This means files already existing in TARGET are ignored. But safeback also cleans up: 
-#: after Backup it reverses operation and scans TARGET for files not existing in SOURCE. These are moved to subfolder (created if not existing) ./Safe
-#: so after execution of safeback you can inspect ./Safe and - if you feel save with a sync - you can delete content or entire directory ./Safe.
+#: Purpose: safeback does a backup from SOURCE to TARGET using ignore-existing. This means files already existing in 
+#: TARGET are ignored. But safeback also cleans up: 
+#: after Backup it reverses operation and scans TARGET for files not existing in SOURCE. These are moved to 
+#: parameter defined subfolder (created if not existing) ./Safe
+#: so after execution of safeback you can inspect ./Safe and - if you feel save with a sync - 
+#: you can delete content or entire directory ./Safe from TARGET.
 #
-# 
+# Possible Issues / Fixes
+# =======================
+# 1: $SAVE should be defined on global level not in (recursive!) routine.
 
 # Global Params
 
