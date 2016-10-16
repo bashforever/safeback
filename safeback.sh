@@ -2,20 +2,19 @@
 #: Name: safeback
 #: Version: 0.0
 #: Datum: 15.12.2014
-#: Purpose: safeback does a backup from SOURCE to TARGET using ignore-existing. This means files already existing in 
-#: TARGET are ignored. But safeback also cleans up: 
-#: after Backup it reverses operation and scans TARGET for files not existing in SOURCE. These are moved to 
-#: parameter defined subfolder (created if not existing) ./Safe
-#: so after execution of safeback you can inspect ./Safe and - if you feel save with a sync - 
-#: you can delete content or entire directory ./Safe from TARGET.
+#: Purpose: safeback does a backup from SOURCE to TARGET using ignore-existing. This means files already existing in TARGET are ignored. But safeback also cleans up: 
+#: after Backup it reverses operation and scans TARGET for files not existing in SOURCE. These are moved to subfolder (created if not existing) ./Safe
+#: so after execution of safeback you can inspect ./Safe and - if you feel save with a sync - you can delete content or entire directory ./Safe.
 #
-# Possible Issues / Fixes
-# =======================
-# 1: $SAVE should be defined on global level not in (recursive!) routine.
+# 
 
 # Global Params
 
-LOGFILE=/etc/iwops/safeback.log
+# Logfile:
+LOGFILE=/etc/iwops/safeback.log 
+# RMFILE collects for all orphaned files in TARGET remove-commands. so if a file has no SOURCE-file, it will be moved to the SAVE-subdir 
+# and an entry to remove this will be ritten to RMFILE
+RMFILE="/etc/iwops/rmsafe.sh"
 
 # ===================== function LOGTEXT ======================================
 # Parameter: Text der ins Logfile geschrieben werden soll
@@ -101,6 +100,7 @@ safeback () {
 	# file does not exist in SOURCE: move to Save (exclude Save!)
 				if [ "$d" != "$SAVE" ]; then
 					mv "$TARGET/$d" "$TARGET/$SAVE"
+ 					echo "rm -v \"$TARGET/$SAVE/$d\"" >> $RMFILE
 					logtext "===== moved $d to SAVE"
 				fi
 			fi
@@ -137,26 +137,25 @@ else
  	exit 1
 fi
 
+# insert here your directories to backup
+# CAUTION: my "real" dirs are removed!!
 # mount of AMS150 done. Start backup in pairs of source and target
-# ================================================================
-# CAUTION: this section only contains several sample paths - real OPERATIONS requires more paths!
-# ================================================================
-SOURCE1="/media/Recs/Aufnahmen/Lieblingsfilme"
-TARGET1="/mnt/AMS150/Videos/Lieblingsfilme"
-backup $SOURCE1 $TARGET1
-safeback $SOURCE1 $TARGET1
 
-SOURCE1="/media/Recs/Aufnahmen/Sophia"
-TARGET1="/mnt/AMS150/Videos/Sophia"
+# now do backup from OMV to AMS150
+SOURCE1="/media/Share/Medien/Videos/Panasonic"
+TARGET1="/mnt/AMS150/Medien/Videos/Panasonic"
 backup $SOURCE1 $TARGET1
-safeback $SOURCE1 $TARGET1
-
-SOURCE1="/media/Recs/Aufnahmen/DVDs"
-TARGET1="/mnt/AMS150/Videos/DVDs"
-backup $SOURCE1 $TARGET1
+# now scan for orphaned files and move to SAVE-dirs (and write rm-command to RMFILE)
 safeback $SOURCE1 $TARGET1
 
 
+SOURCE1="/media/Share/Medien/Buecher"
+TARGET1="/mnt/AMS150/Medien/Buecher"
+backup $SOURCE1 $TARGET1
+backup $TARGET1 $SOURCE1
+# no reverse scan of "Buecher" !!
+# Backup runs additively in both directions!!
+# safeback $SOURCE1 $TARGET1
 exit 0
 
 # End of Main
